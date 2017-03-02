@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">FineWeather</string>
+    <string name="app_name">好晴天气</string>
+    <string name="choose_city">选择城市</string>
 </resources>
