@@ -1,6 +1,9 @@
 package com.chris.fineweather.view;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -55,7 +58,15 @@ public class ChooseCityFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedCityId = cityList.get(position).getCityId();
-                titleText.setText(selectedCityId);
+                String selectedCityName = cityList.get(position).getCityName();
+                titleText.setText(selectedCityName);
+                SharedPreferences.Editor editor = getActivity().
+                        getSharedPreferences("weather", Context.MODE_PRIVATE).edit();
+                editor.putString("selectedCityId",selectedCityId);
+                editor.apply();
+                Intent intent = new Intent(getActivity(),WeatherActivity.class);
+                startActivity(intent);
+                getActivity().finish();
             }
         });
         queryCity();
@@ -71,14 +82,14 @@ public class ChooseCityFragment extends Fragment {
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
         } else {
-            String url = "http://files.heweather.com/china-city-list.json";
-            queryCityFromServer(url);
+            String chinaCityUrl = "http://files.heweather.com/china-city-list.json";
+            queryCityFromServer(chinaCityUrl);
         }
     }
     //从服务器上查询城市
-    private void queryCityFromServer(String url) {
+    private void queryCityFromServer(String chinaCityUrl) {
         showProgressDialog();
-        HttpUtil.sendRequestWithOkHttp(url, new Callback() {
+        HttpUtil.sendRequestWithOkHttp(chinaCityUrl, new Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String responseText = response.body().string();
@@ -101,7 +112,7 @@ public class ChooseCityFragment extends Fragment {
                     @Override
                     public void run() {
                         closeProgressDialog();
-                        Toast.makeText(getContext(), "加载失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "城市数据加载失败", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

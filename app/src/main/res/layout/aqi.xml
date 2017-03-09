@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    app:cardCornerRadius="4dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/air_quality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="空气质量"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/aqi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:textSize="36sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/air_quality" />
+
+        <TextView
+            android:id="@+id/aqi_qlty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/aqi"
+            app:layout_constraintLeft_toRightOf="@+id/aqi" />
+
+        <TextView
+            android:id="@+id/aqi_yyht"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="20dp"
+            android:text="CO"
+            app:layout_constraintBottom_toBottomOf="@+id/aqi_eyhd"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/aqi_eyhd" />
+
+        <TextView
+            android:id="@+id/aqi_eyhd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginRight="20dp"
+            android:text="NO₂"
+            app:layout_constraintBottom_toBottomOf="@+id/aqi_lz10"
+            app:layout_constraintRight_toLeftOf="@+id/aqi_lz10" />
+
+        <TextView
+            android:id="@+id/aqi_cy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="20dp"
+            android:text="O₃"
+            app:layout_constraintBottom_toBottomOf="@+id/aqi_lz25"
+            app:layout_constraintLeft_toRightOf="@+id/aqi_lz25" />
+
+        <TextView
+            android:id="@+id/aqi_eyhl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="8dp"
+            android:text="SO₂"
+            app:layout_constraintBottom_toBottomOf="@+id/aqi_cy"
+            app:layout_constraintLeft_toRightOf="@+id/aqi_cy"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:id="@+id/aqi_lz10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginRight="20dp"
+            android:text="PM10"
+            app:layout_constraintBottom_toBottomOf="@+id/aqi"
+            app:layout_constraintRight_toLeftOf="@+id/aqi" />
+
+        <TextView
+            android:id="@+id/aqi_lz25"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="20dp"
+            android:text="PM2.5"
+            app:layout_constraintBottom_toBottomOf="@+id/aqi"
+            app:layout_constraintLeft_toRightOf="@+id/aqi" />
+
+        <TextView
+            android:id="@+id/aqi_co"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginRight="25dp"
+            app:layout_constraintBottom_toTopOf="@+id/aqi_yyht"
+            app:layout_constraintRight_toLeftOf="@+id/aqi_eyhd" />
+
+        <TextView
+            android:id="@+id/aqi_no2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginRight="26dp"
+            app:layout_constraintBottom_toTopOf="@+id/aqi_eyhd"
+            app:layout_constraintRight_toLeftOf="@+id/aqi_lz10" />
+
+        <TextView
+            android:id="@+id/aqi_o3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="25dp"
+            app:layout_constraintBottom_toTopOf="@+id/aqi_cy"
+            app:layout_constraintLeft_toRightOf="@+id/aqi_lz25" />
+
+        <TextView
+            android:id="@+id/aqi_so2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="26dp"
+            app:layout_constraintBottom_toTopOf="@+id/aqi_eyhl"
+            app:layout_constraintLeft_toRightOf="@+id/aqi_cy" />
+
+        <TextView
+            android:id="@+id/aqi_pm10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginRight="30dp"
+            app:layout_constraintBottom_toTopOf="@+id/aqi_lz10"
+            app:layout_constraintRight_toLeftOf="@+id/aqi" />
+
+        <TextView
+            android:id="@+id/aqi_pm25"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="30dp"
+            app:layout_constraintBottom_toTopOf="@+id/aqi_lz25"
+            app:layout_constraintLeft_toRightOf="@+id/aqi" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>
