@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chris.fineweather.R;
 import com.chris.fineweather.gson.Weather;
+import com.chris.fineweather.service.AutoUpdateService;
 import com.chris.fineweather.util.HttpUtil;
 import com.chris.fineweather.util.ParserUtil;
 
@@ -38,7 +39,8 @@ import okhttp3.Response;
 public class WeatherActivity extends AppCompatActivity {
 
     private SwipeRefreshLayout swipeRefresh;
-    private View nvHeader;
+    private ImageView ctbImage;
+    private ImageView nvHeaderImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +56,7 @@ public class WeatherActivity extends AppCompatActivity {
 
         //为navigationView的menu设置点击事件
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        nvHeader = navigationView.inflateHeaderView(R.layout.nv_header);
+        View nvHeader = navigationView.inflateHeaderView(R.layout.nv_header);
         navigationView.setCheckedItem(R.id.location);
         navigationView.setNavigationItemSelectedListener(new NavigationView.
                 OnNavigationItemSelectedListener() {
@@ -113,15 +115,31 @@ public class WeatherActivity extends AppCompatActivity {
             requestWeather(cityId);
         }
 
-        //下拉刷新天气
+        //header背景图缓存机制
+        ctbImage = (ImageView) findViewById(R.id.collapsing_toolbar_image);
+        nvHeaderImage = (ImageView) nvHeader.findViewById(R.id.nv_header_image);
+        String imageUrlCache = prefs.getString("imageUrlCache",null);
+        if (imageUrlCache != null) {
+            Glide.with(this).load(imageUrlCache).into(ctbImage);
+            Glide.with(this).load(imageUrlCache).into(nvHeaderImage);
+        } else {
+            loadHeaderImage();
+        }
+
+        //下拉刷新天气和背景图
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 requestWeather(cityId);
+                loadHeaderImage();
             }
         });
+
+        //启动天气自动更新服务
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 
     //从服务器查询天气数据
@@ -134,12 +152,13 @@ public class WeatherActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(WeatherActivity.this, "你可能没联网哦",
+                        Toast.makeText(WeatherActivity.this, "没联网咋更新天气呢",
                                 Toast.LENGTH_SHORT).show();
                         swipeRefresh.setRefreshing(false);
                     }
                 });
             }
+
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 final String weatherResponse = response.body().string();
@@ -154,7 +173,7 @@ public class WeatherActivity extends AppCompatActivity {
                             showWeatherInfo(weather);
                             Toast.makeText(WeatherActivity.this, "天气更新成功", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(WeatherActivity.this, "服务器可能炸啦", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(WeatherActivity.this, "气象服务器异常", Toast.LENGTH_SHORT).show();
                         }
                         swipeRefresh.setRefreshing(false);
                     }
@@ -165,10 +184,6 @@ public class WeatherActivity extends AppCompatActivity {
 
     //从服务器加载header背景图片
     public void loadHeaderImage() {
-
-        final ImageView nvHeaderImage = (ImageView) nvHeader.findViewById(R.id.nv_header_image);
-        final ImageView collapsingToolbar_image = (ImageView) findViewById(R.id.collapsing_toolbar_image);
-
         String imageRequestUrl = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1";
         HttpUtil.sendRequestWithOkHttp(imageRequestUrl, new Callback() {
             @Override
@@ -176,7 +191,7 @@ public class WeatherActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(WeatherActivity.this, "美美的图片加载失败了", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(WeatherActivity.this, "没联网咋看美美的图片呢", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -184,12 +199,21 @@ public class WeatherActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 String imageRequestResponse = response.body().string();
-                final String imageUrl = "https://bing.com" + ParserUtil.handleImageResponse(imageRequestResponse);
+                final String url = ParserUtil.handleImageResponse(imageRequestResponse);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Glide.with(WeatherActivity.this).load(imageUrl).into(collapsingToolbar_image);
-                        Glide.with(WeatherActivity.this).load(imageUrl).into(nvHeaderImage);
+                        if (url != null) {
+                            String imageUrl = "https://bing.com" + url;
+                            SharedPreferences.Editor editor = getSharedPreferences("weather",MODE_PRIVATE).edit();
+                            editor.putString("imageUrlCache",imageUrl);
+                            editor.apply();
+                            Glide.with(WeatherActivity.this).load(imageUrl).into(ctbImage);
+                            Glide.with(WeatherActivity.this).load(imageUrl).into(nvHeaderImage);
+                            Toast.makeText(WeatherActivity.this, "图片更新成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(WeatherActivity.this, "图片服务器异常", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }
@@ -198,9 +222,6 @@ public class WeatherActivity extends AppCompatActivity {
 
     //将天气数据显示到UI上
     public void showWeatherInfo(Weather weather) {
-
-        loadHeaderImage();
-
         //basic
         TextView basicUpdateLoc = (TextView) findViewById(R.id.update_loc);
         //now
