@@ -75,10 +75,10 @@
             android:id="@+id/fab_favourite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
             android:src="@mipmap/ic_fab_favourite"
-            app:layout_anchor="@id/appBar"
-            app:layout_anchorGravity="bottom|end"/>
+            android:layout_margin="15dp"
+            app:layout_anchorGravity="bottom|end"
+            app:layout_anchor="@id/appBar"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

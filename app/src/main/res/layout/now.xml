@@ -48,7 +48,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="体感温度"
+            android:text="@string/tgwd"
             app:layout_constraintBottom_toTopOf="@+id/now_xdsd"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/now" />
@@ -60,7 +60,7 @@
             android:layout_marginBottom="0dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:text="相对湿度"
+            android:text="@string/xdsd"
             app:layout_constraintBottom_toTopOf="@+id/now_jsl"
             app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -71,7 +71,7 @@
             android:layout_marginBottom="0dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:text="降水量"
+            android:text="@string/jsl"
             app:layout_constraintBottom_toTopOf="@+id/now_qy"
             app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -82,7 +82,7 @@
             android:layout_marginBottom="0dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:text="气压"
+            android:text="@string/qy"
             app:layout_constraintBottom_toTopOf="@+id/now_njd"
             app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -93,7 +93,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:text="能见度"
+            android:text="@string/njd"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -149,7 +149,7 @@
             android:layout_marginBottom="0dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="风度"
+            android:text="@string/fd"
             app:layout_constraintBottom_toTopOf="@+id/now_wind_fx"
             app:layout_constraintRight_toRightOf="parent" />
 
@@ -160,7 +160,7 @@
             android:layout_marginBottom="0dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="风向"
+            android:text="@string/fx"
             app:layout_constraintBottom_toTopOf="@+id/now_wind_fl"
             app:layout_constraintRight_toRightOf="parent" />
 
@@ -171,7 +171,7 @@
             android:layout_marginBottom="0dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="风力"
+            android:text="@string/fl"
             app:layout_constraintBottom_toTopOf="@+id/now_wind_fs"
             app:layout_constraintRight_toRightOf="parent" />
 
@@ -182,7 +182,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="风速"
+            android:text="@string/fs"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 
@@ -229,7 +229,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="实时天气"
+            android:text="@string/now"
             android:textSize="16sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

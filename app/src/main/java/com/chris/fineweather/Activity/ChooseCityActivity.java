@@ -1,14 +1,12 @@
-package com.chris.fineweather.view;
+package com.chris.fineweather.Activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -30,8 +28,8 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-//创建碎片显示城市列表
-public class ChooseCityFragment extends Fragment {
+public class ChooseCityActivity extends AppCompatActivity {
+
     private TextView titleText;
     private ListView listView;
     private ArrayAdapter<String> adapter;
@@ -39,38 +37,34 @@ public class ChooseCityFragment extends Fragment {
     private List<ChinaCity> cityList;
     private ProgressDialog progressDialog;
 
-    //为ListView设置适配器
     @Override
-    public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.choose_city, container, false);
-        titleText = (TextView) view.findViewById(R.id.title_text);
-        listView = (ListView) view.findViewById(R.id.city_list);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_chocity);
+        titleText = (TextView) findViewById(R.id.title_text);
+        //为ListView设置适配器
+        listView = (ListView) findViewById(R.id.city_list);
         dataList = new ArrayList<>();
-        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, dataList);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dataList);
         listView.setAdapter(adapter);
-        return view;
-    }
-    //设置ListView的点击事件
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        //设置ListView的点击事件
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedCityId = cityList.get(position).getCityId();
                 String selectedCityName = cityList.get(position).getCityName();
                 titleText.setText(selectedCityName);
-                SharedPreferences.Editor editor = getActivity().
-                        getSharedPreferences("weather", Context.MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor = getSharedPreferences("weather", Context.MODE_PRIVATE).edit();
                 editor.putString("selectedCityId",selectedCityId);
                 editor.apply();
-                Intent intent = new Intent(getActivity(),WeatherActivity.class);
+                Intent intent = new Intent(ChooseCityActivity.this,WeatherActivity.class);
                 startActivity(intent);
-                getActivity().finish();
+                finish();
             }
         });
         queryCity();
     }
+
     //查询城市，优先从数据库查询，若没有则从服务器上查询
     private void queryCity() {
         cityList = DataSupport.findAll(ChinaCity.class);
@@ -86,6 +80,7 @@ public class ChooseCityFragment extends Fragment {
             queryCityFromServer(chinaCityUrl);
         }
     }
+
     //从服务器上查询城市
     private void queryCityFromServer(String chinaCityUrl) {
         showProgressDialog();
@@ -96,7 +91,7 @@ public class ChooseCityFragment extends Fragment {
                 boolean parserResult;
                 parserResult = ParserUtil.handleChinaCityResponse(responseText);
                 if (parserResult) {
-                    getActivity().runOnUiThread(new Runnable() {
+                    runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             closeProgressDialog();
@@ -108,25 +103,28 @@ public class ChooseCityFragment extends Fragment {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                getActivity().runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         closeProgressDialog();
-                        Toast.makeText(getContext(), "城市数据加载失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ChooseCityActivity.this, "城市数据加载失败", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         });
     }
+
     //显示联网查询进度对话框
     private void showProgressDialog() {
         if (progressDialog == null) {
-            progressDialog = new ProgressDialog(getActivity());
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("城市列表");
             progressDialog.setMessage("服务器加载中...");
             progressDialog.setCanceledOnTouchOutside(false);
         }
         progressDialog.show();
     }
+
     //关闭联网查询进度对话框
     private void closeProgressDialog() {
         if (progressDialog != null) {

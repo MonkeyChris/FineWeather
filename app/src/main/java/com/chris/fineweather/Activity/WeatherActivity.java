@@ -1,4 +1,4 @@
-package com.chris.fineweather.view;
+package com.chris.fineweather.Activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -64,7 +64,8 @@ public class WeatherActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.location:
-                        //切换城市待实现
+                        Intent intent = new Intent(WeatherActivity.this,ChooseCityActivity.class);
+                        startActivity(intent);
                         break;
                     case R.id.setting:
                         //设置待实现
@@ -94,7 +95,7 @@ public class WeatherActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse("https://github.com/MonkeyChris"));
+                        intent.setData(Uri.parse("https://github.com/MonkeyChris/FineWeather"));
                         startActivity(intent);
                     }
                 });
@@ -144,7 +145,7 @@ public class WeatherActivity extends AppCompatActivity {
 
     //从服务器查询天气数据
     public void requestWeather(String cityId) {
-        String weatherUrl = "https://free-api.heweather.com/v5/weather?city=" + cityId +
+        String weatherUrl = "https://api.heweather.com/v5/weather?city=" + cityId +
                 "&key=ae45a4738bde4a3d9039cda85f4b42a3";
         HttpUtil.sendRequestWithOkHttp(weatherUrl, new Callback() {
             @Override

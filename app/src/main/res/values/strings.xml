@@ -1,4 +1,24 @@
 <resources>
     <string name="app_name">好晴天气</string>
     <string name="choose_city">选择城市</string>
+    <string name="splashText">最美的天气遇见最美的你</string>
+    <string name="alarm">灾害预警</string>
+    <string name="airQuality">空气质量</string>
+    <string name="comfort">舒适度</string>
+    <string name="tgwd">体感温度</string>
+    <string name="xdsd">相对湿度</string>
+    <string name="jsl">降水量</string>
+    <string name="qy">气压</string>
+    <string name="njd">能见度</string>
+    <string name="fd">风度</string>
+    <string name="fx">风向</string>
+    <string name="fl">风力</string>
+    <string name="fs">风速</string>
+    <string name="now">实时天气</string>
+    <string name="cyzs">穿衣指数--</string>
+    <string name="fszs">防晒指数--</string>
+    <string name="gmzs">感冒指数--</string>
+    <string name="ydzs">运动指数--</string>
+    <string name="lyzs">旅游指数--</string>
+    <string name="xczs">洗车指数--</string>
 </resources>

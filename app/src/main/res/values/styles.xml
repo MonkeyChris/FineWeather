@@ -11,4 +11,8 @@
     <style name="WeatherActivityTheme" parent="AppTheme">
     </style>
 
+    <style name="SplashActivityTheme" parent="AppTheme">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
 </resources>
