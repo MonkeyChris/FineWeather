@@ -1,7 +1,6 @@
 package com.chris.fineweather.Activity;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -41,21 +40,23 @@ public class ChooseCityActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chocity);
+
         titleText = (TextView) findViewById(R.id.title_text);
+
         //为ListView设置适配器
         listView = (ListView) findViewById(R.id.city_list);
         dataList = new ArrayList<>();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dataList);
         listView.setAdapter(adapter);
+
         //设置ListView的点击事件
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedCityId = cityList.get(position).getCityId();
-                String selectedCityName = cityList.get(position).getCityName();
-                titleText.setText(selectedCityName);
-                SharedPreferences.Editor editor = getSharedPreferences("weather", Context.MODE_PRIVATE).edit();
-                editor.putString("selectedCityId",selectedCityId);
+                String cityName = cityList.get(position).getCityName();
+                titleText.setText(cityName);
+                SharedPreferences.Editor editor = getSharedPreferences("weather", MODE_PRIVATE).edit();
+                editor.putString("cityName",cityName);
                 editor.apply();
                 Intent intent = new Intent(ChooseCityActivity.this,WeatherActivity.class);
                 startActivity(intent);

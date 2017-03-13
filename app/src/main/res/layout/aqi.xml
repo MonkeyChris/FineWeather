@@ -113,54 +113,53 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="0dp"
-            android:layout_marginRight="25dp"
+            android:layout_marginLeft="4dp"
             app:layout_constraintBottom_toTopOf="@+id/aqi_yyht"
-            app:layout_constraintRight_toLeftOf="@+id/aqi_eyhd" />
+            app:layout_constraintLeft_toLeftOf="@+id/aqi_yyht" />
 
         <TextView
             android:id="@+id/aqi_no2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="0dp"
-            android:layout_marginRight="26dp"
             app:layout_constraintBottom_toTopOf="@+id/aqi_eyhd"
-            app:layout_constraintRight_toLeftOf="@+id/aqi_lz10" />
+            android:layout_marginLeft="2dp"
+            app:layout_constraintLeft_toLeftOf="@+id/aqi_eyhd" />
 
         <TextView
             android:id="@+id/aqi_o3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="0dp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="25dp"
             app:layout_constraintBottom_toTopOf="@+id/aqi_cy"
-            app:layout_constraintLeft_toRightOf="@+id/aqi_lz25" />
+            android:layout_marginRight="2dp"
+            app:layout_constraintRight_toRightOf="@+id/aqi_cy" />
 
         <TextView
             android:id="@+id/aqi_so2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="0dp"
-            android:layout_marginLeft="26dp"
             app:layout_constraintBottom_toTopOf="@+id/aqi_eyhl"
-            app:layout_constraintLeft_toRightOf="@+id/aqi_cy" />
+            android:layout_marginRight="4dp"
+            app:layout_constraintRight_toRightOf="@+id/aqi_eyhl" />
 
         <TextView
             android:id="@+id/aqi_pm10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            app:layout_constraintLeft_toLeftOf="@+id/aqi_lz10"
             android:layout_marginBottom="0dp"
-            android:layout_marginRight="30dp"
-            app:layout_constraintBottom_toTopOf="@+id/aqi_lz10"
-            app:layout_constraintRight_toLeftOf="@+id/aqi" />
+            app:layout_constraintBottom_toTopOf="@+id/aqi_lz10" />
 
         <TextView
             android:id="@+id/aqi_pm25"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="0dp"
-            android:layout_marginLeft="30dp"
             app:layout_constraintBottom_toTopOf="@+id/aqi_lz25"
-            app:layout_constraintLeft_toRightOf="@+id/aqi" />
+            android:layout_marginRight="14dp"
+            app:layout_constraintRight_toRightOf="@+id/aqi_lz25" />
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

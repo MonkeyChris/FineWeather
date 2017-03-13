@@ -30,8 +30,8 @@ public class AutoUpdateService extends Service {
         updateWeather();
         updateHeaderImage();
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        int cycleTime = 15 * 60 * 1000;
-        long triggerTime = SystemClock.elapsedRealtime() + cycleTime;
+        int updateTime = 60 * 60 * 1000;
+        long triggerTime = SystemClock.elapsedRealtime() + updateTime;
         Intent i = new Intent(this,AutoUpdateService.class);
         PendingIntent pi = PendingIntent.getService(this,0,i,0);
         alarmManager.cancel(pi);
@@ -41,8 +41,8 @@ public class AutoUpdateService extends Service {
 
     private void updateWeather() {
         SharedPreferences prefs = getSharedPreferences("weather",MODE_PRIVATE);
-        String cityId = prefs.getString("selectedCityId",null);
-        String weatherUrl = "https://api.heweather.com/v5/weather?city=" + cityId +
+        String cityName = prefs.getString("cityName",null);
+        String weatherUrl = "https://api.heweather.com/v5/weather?city=" + cityName +
                 "&key=ae45a4738bde4a3d9039cda85f4b42a3";
         HttpUtil.sendRequestWithOkHttp(weatherUrl, new Callback() {
             @Override

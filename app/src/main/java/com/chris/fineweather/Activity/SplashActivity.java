@@ -1,18 +1,30 @@
 package com.chris.fineweather.Activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.bumptech.glide.Glide;
 import com.chris.fineweather.R;
 import com.chris.fineweather.util.HttpUtil;
 import com.chris.fineweather.util.ParserUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -21,41 +33,119 @@ import okhttp3.Response;
 public class SplashActivity extends AppCompatActivity {
 
     private ImageView splashImage;
+    private SharedPreferences.Editor editor;
+    private LocationClient locationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        //闪屏页缓存机制
-        final SharedPreferences prefs = getSharedPreferences("weather",MODE_PRIVATE);
+        //闪屏页图片缓存机制
+        SharedPreferences prefs = getSharedPreferences("weather", MODE_PRIVATE);
         String imageUrlCache = prefs.getString("imageUrlCache",null);
         splashImage = (ImageView) findViewById(R.id.splash_image);
         if (imageUrlCache != null) {
             Glide.with(this).load(imageUrlCache).into(splashImage);
         } else {
-            loadSplashImage();
+           loadSplashImage();
         }
 
-        //闪屏页加载完成，利用handler延迟页面转换
-        int SPLASH_TIME = 2 * 1000;
-        new Handler().postDelayed(new Runnable() {
+        //利用handler.postDelayed方法延迟页面转换
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                //判断是否存在天气缓存，存在则加载天气Activity，否则加载选择城市Activity
-                if (prefs.getString("weatherCache",null) != null) {
-                    Intent intent = new Intent(SplashActivity.this, WeatherActivity.class);
+                requestPermission(); //请求权限
+            }
+        },1000);
+    }
+
+    //权限请求
+    public void requestPermission() {
+        List<String> permissionList = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if (ContextCompat.checkSelfPermission(this,Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.READ_PHONE_STATE);
+        }
+        if (ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }if (!permissionList.isEmpty()) {
+            String [] permissions = permissionList.toArray(new String[permissionList.size()]);
+            ActivityCompat.requestPermissions(this,permissions,1);
+        } else {
+            requestLocation();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0){
+                    for (int result : grantResults) {
+                        if (result != PackageManager.PERMISSION_GRANTED) {
+                            Toast.makeText(this, "定位授权失败,手动选择城市或重新授权",
+                                    Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(SplashActivity.this,WeatherActivity.class);
+                            startActivity(intent);
+                            finish();
+                            return;
+                        }
+                    }
+                    requestLocation();
+                } else {
+                    Toast.makeText(this, "发生未知错误", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    //定位请求
+    public void requestLocation() {
+        locationClient = new LocationClient(getApplicationContext());
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+        option.setIsNeedAddress(true);
+        option.setScanSpan(1000);
+        locationClient.setLocOption(option);
+        locationClient.start();
+        locationClient.registerLocationListener(new BDLocationListener() {
+            @Override
+            public void onReceiveLocation(BDLocation bdLocation) {
+                String cityName = bdLocation.getCity();
+                if (cityName != null) {
+                    editor = getSharedPreferences("weather",MODE_PRIVATE).edit();
+                    editor.putString("cityName",cityName);
+                    editor.apply();
+                    Intent intent = new Intent(SplashActivity.this,WeatherActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
-                    Intent intent = new Intent(SplashActivity.this,ChooseCityActivity.class);
+                    Toast.makeText(SplashActivity.this, "定位授权失败,手动选择城市或重新授权",
+                            Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(SplashActivity.this,WeatherActivity.class);
                     startActivity(intent);
                     finish();
                 }
             }
-        }, SPLASH_TIME);
+
+            @Override
+            public void onConnectHotSpotMessage(String s, int i) {
+
+            }
+        });
     }
 
+    //图片请求
     public void loadSplashImage() {
         String imageRequestUrl = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1";
         HttpUtil.sendRequestWithOkHttp(imageRequestUrl, new Callback() {
@@ -68,19 +158,25 @@ public class SplashActivity extends AppCompatActivity {
             public void onResponse(Call call, final Response response) throws IOException {
                 String imageRequestResponse = response.body().string();
                 final String url = ParserUtil.handleImageResponse(imageRequestResponse);
+                final String imageUrl = "https://bing.com" + url;
+                editor = getSharedPreferences("weather",MODE_PRIVATE).edit();
+                editor.putString("imageUrlCache",imageUrl);
+                editor.apply();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (url != null) {
-                            String imageUrl = "https://bing.com" + url;
-                            SharedPreferences.Editor editor = getSharedPreferences("weather",MODE_PRIVATE).edit();
-                            editor.putString("imageUrlCache",imageUrl);
-                            editor.apply();
                             Glide.with(SplashActivity.this).load(imageUrl).into(splashImage);
                         }
                     }
                 });
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        locationClient.stop();
     }
 }

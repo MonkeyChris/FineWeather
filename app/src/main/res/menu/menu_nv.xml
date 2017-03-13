@@ -3,17 +3,17 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/location"
-            android:title="定位"
+            android:title="@string/location"
             android:icon="@mipmap/ic_location"/>
 
         <item
             android:id="@+id/setting"
-            android:title="设置"
+            android:title="@string/setting"
             android:icon="@mipmap/ic_setting"/>
 
         <item
             android:id="@+id/about"
-            android:title="关于"
+            android:title="@string/about"
             android:icon="@mipmap/ic_about"/>
     </group>
 

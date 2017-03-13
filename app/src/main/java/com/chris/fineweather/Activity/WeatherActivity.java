@@ -38,7 +38,8 @@ import okhttp3.Response;
 
 public class WeatherActivity extends AppCompatActivity {
 
-    private SwipeRefreshLayout swipeRefresh;
+    public SwipeRefreshLayout swipeRefresh;
+    private DrawerLayout drawerLayout;
     private ImageView ctbImage;
     private ImageView nvHeaderImage;
 
@@ -46,6 +47,8 @@ public class WeatherActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -64,6 +67,7 @@ public class WeatherActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.location:
+                        drawerLayout.closeDrawers();
                         Intent intent = new Intent(WeatherActivity.this,ChooseCityActivity.class);
                         startActivity(intent);
                         break;
@@ -104,16 +108,22 @@ public class WeatherActivity extends AppCompatActivity {
         });
 
         //天气数据缓存机制
-        SharedPreferences prefs = getSharedPreferences("weather", MODE_PRIVATE);
+        final SharedPreferences prefs = getSharedPreferences("weather", MODE_PRIVATE);
         String weatherCache = prefs.getString("weatherCache", null);
-        final String cityId = prefs.getString("selectedCityId",null);
+        String cityName = prefs.getString("cityName",null);
         if (weatherCache != null) {
             //有缓存时直接读取缓存数据进行解析
             Weather weather = ParserUtil.handleWeatherResponse(weatherCache);
-            showWeatherInfo(weather);
+            if (weather != null) {
+                if ((weather.basic.city + "市").equals(cityName)) {
+                    showWeatherInfo(weather);
+                } else {
+                    requestWeather(cityName);
+                }
+            }
         } else {
             //无缓存时从服务器查询
-            requestWeather(cityId);
+            requestWeather(cityName);
         }
 
         //header背景图缓存机制
@@ -128,12 +138,12 @@ public class WeatherActivity extends AppCompatActivity {
         }
 
         //下拉刷新天气和背景图
-        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestWeather(cityId);
+                String cityName = prefs.getString("cityName",null);
+                requestWeather(cityName);
                 loadHeaderImage();
             }
         });
@@ -144,8 +154,8 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
     //从服务器查询天气数据
-    public void requestWeather(String cityId) {
-        String weatherUrl = "https://api.heweather.com/v5/weather?city=" + cityId +
+    public void requestWeather(String cityName) {
+        String weatherUrl = "https://api.heweather.com/v5/weather?city=" + cityName +
                 "&key=ae45a4738bde4a3d9039cda85f4b42a3";
         HttpUtil.sendRequestWithOkHttp(weatherUrl, new Callback() {
             @Override
@@ -174,7 +184,7 @@ public class WeatherActivity extends AppCompatActivity {
                             showWeatherInfo(weather);
                             Toast.makeText(WeatherActivity.this, "天气更新成功", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(WeatherActivity.this, "气象服务器异常", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(WeatherActivity.this, "天气加载失败", Toast.LENGTH_SHORT).show();
                         }
                         swipeRefresh.setRefreshing(false);
                     }
@@ -189,34 +199,26 @@ public class WeatherActivity extends AppCompatActivity {
         HttpUtil.sendRequestWithOkHttp(imageRequestUrl, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(WeatherActivity.this, "没联网咋看美美的图片呢", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                e.printStackTrace();
             }
 
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 String imageRequestResponse = response.body().string();
                 final String url = ParserUtil.handleImageResponse(imageRequestResponse);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (url != null) {
-                            String imageUrl = "https://bing.com" + url;
-                            SharedPreferences.Editor editor = getSharedPreferences("weather",MODE_PRIVATE).edit();
-                            editor.putString("imageUrlCache",imageUrl);
-                            editor.apply();
+                if (url != null) {
+                    final String imageUrl = "https://bing.com" + url;
+                    SharedPreferences.Editor editor = getSharedPreferences("weather", MODE_PRIVATE).edit();
+                    editor.putString("imageUrlCache", imageUrl);
+                    editor.apply();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
                             Glide.with(WeatherActivity.this).load(imageUrl).into(ctbImage);
                             Glide.with(WeatherActivity.this).load(imageUrl).into(nvHeaderImage);
-                            Toast.makeText(WeatherActivity.this, "图片更新成功", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(WeatherActivity.this, "图片服务器异常", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                });
+                    });
+                }
             }
         });
     }
@@ -374,7 +376,6 @@ public class WeatherActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
                 drawerLayout.openDrawer(GravityCompat.START);//点击菜单按钮打开NV
                 break;
             default:
