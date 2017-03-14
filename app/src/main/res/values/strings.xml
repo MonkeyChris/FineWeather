@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">好晴天气</string>
     <string name="choose_city">城市</string>
-    <string name="splashText">最美的天气遇见最美的你</string>
     <string name="alarm">灾害预警</string>
     <string name="airQuality">空气质量</string>
     <string name="comfort">舒适度</string>
@@ -25,4 +24,7 @@
     <string name="location">城市</string>
     <string name="setting">设置</string>
     <string name="about">关于</string>
+    <string name="praiseText">遇见你，生命中从此是晴天。好晴天气，简洁，优雅，无广告，无多余权限，一切只为你。</string>
+    <string name="donateText">随意微信打个赏吧</string>
+    <string name="version_text">Version : 2.0</string>
 </resources>

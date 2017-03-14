@@ -75,10 +75,10 @@
             android:id="@+id/fab_favourite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="16dp"
             android:src="@mipmap/ic_fab_favourite"
-            android:layout_margin="15dp"
-            app:layout_anchorGravity="bottom|end"
-            app:layout_anchor="@id/appBar"/>
+            app:layout_anchor="@id/appBar"
+            app:layout_anchorGravity="bottom|end"/>
 
     </android.support.design.widget.CoordinatorLayout>
 
@@ -89,5 +89,4 @@
         android:layout_gravity="start"
         app:menu="@menu/menu_nv">
     </android.support.design.widget.NavigationView>
-
 </android.support.v4.widget.DrawerLayout>

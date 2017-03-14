@@ -8,10 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="WeatherActivityTheme" parent="AppTheme">
+    <style name="TransparentStatusBarTheme" parent="AppTheme">
     </style>
 
-    <style name="SplashActivityTheme" parent="AppTheme">
+    <style name="FullScreenTheme" parent="AppTheme">
         <item name="android:windowFullscreen">true</item>
     </style>
 

@@ -68,16 +68,17 @@ public class WeatherActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.location:
                         drawerLayout.closeDrawers();
-                        Intent intent = new Intent(WeatherActivity.this,ChooseCityActivity.class);
-                        startActivity(intent);
+                        Intent cityIntent = new Intent(WeatherActivity.this,ChooseCityActivity.class);
+                        startActivity(cityIntent);
                         break;
                     case R.id.setting:
                         //设置待实现
                         Toast.makeText(WeatherActivity.this, "这个功能很快就会有哒", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.about:
-                        //关于待实现
-                        Toast.makeText(WeatherActivity.this, "这个功能很快也会有哒", Toast.LENGTH_SHORT).show();
+                        drawerLayout.closeDrawers();
+                        Intent aboutIntent = new Intent(WeatherActivity.this,AboutActivity.class);
+                        startActivity(aboutIntent);
                         break;
                     default:
                         break;
@@ -115,7 +116,7 @@ public class WeatherActivity extends AppCompatActivity {
             //有缓存时直接读取缓存数据进行解析
             Weather weather = ParserUtil.handleWeatherResponse(weatherCache);
             if (weather != null) {
-                if ((weather.basic.city + "市").equals(cityName)) {
+                if ((weather.basic.city + "县").equals(cityName)) {
                     showWeatherInfo(weather);
                 } else {
                     requestWeather(cityName);
@@ -243,7 +244,7 @@ public class WeatherActivity extends AppCompatActivity {
         //alarm
         TextView alarmLevel = (TextView) findViewById(R.id.alarm_level);
         TextView alarmStat = (TextView) findViewById(R.id.alarm_stat);
-        TextView alarmTitle = (TextView) findViewById(R.id.alarm_title);
+        TextView alarmTitle = (TextView) findViewById(R.id.alarm);
         TextView alarmTxt = (TextView) findViewById(R.id.alarm_txt);
         TextView alarmType = (TextView) findViewById(R.id.alarm_type);
         ImageView alarmNa = (ImageView) findViewById(R.id.alarm_na);
@@ -258,7 +259,7 @@ public class WeatherActivity extends AppCompatActivity {
         TextView aqiPm25 = (TextView) findViewById(R.id.aqi_pm25);
         //suggestion
         TextView suggestionComfBrf = (TextView) findViewById(R.id.suggestion_comfort_brf);
-        TextView suggestionComfTxt = (TextView) findViewById(R.id.suggention_comf_txt);
+        TextView suggestionComfTxt = (TextView) findViewById(R.id.suggestion_comf_txt);
         TextView suggestionDrsgBrf = (TextView) findViewById(R.id.drsg_brf);
         TextView suggestionDrsgTxt = (TextView) findViewById(R.id.drsg_txt);
         TextView suggestionUVBrf = (TextView) findViewById(R.id.uv_brf);
