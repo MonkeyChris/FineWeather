@@ -17,6 +17,7 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.chris.fineweather.R;
+import com.chris.fineweather.service.AutoUpdateService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,13 +44,14 @@ public class SplashActivity extends AppCompatActivity {
         }*/
 
         //利用handler.postDelayed方法延迟页面转换
+        int delayTime = 2000;
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 requestPermission(); //请求权限
             }
-        },2000);
+        },delayTime);
     }
 
     //权限请求
@@ -81,18 +83,15 @@ public class SplashActivity extends AppCompatActivity {
                 if (grantResults.length > 0){
                     for (int result : grantResults) {
                         if (result != PackageManager.PERMISSION_GRANTED) {
-                            Toast.makeText(this, "定位授权失败,手动选择城市或重新授权",
-                                    Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(SplashActivity.this,WeatherActivity.class);
-                            startActivity(intent);
-                            finish();
+                            Toast.makeText(this,"定位授权失败,手动选择城市或重新授权",Toast.LENGTH_LONG).show();
+                            startWeatherActivity();
                             return;
                         } else {
                             requestLocation();
                         }
                     }
                 } else {
-                    Toast.makeText(this, "发生未知错误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,"发生未知错误",Toast.LENGTH_LONG).show();
                     finish();
                 }
                 break;
@@ -107,19 +106,21 @@ public class SplashActivity extends AppCompatActivity {
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         option.setIsNeedAddress(true);
-        option.setScanSpan(1000);
         locationClient.setLocOption(option);
         locationClient.start();
         locationClient.registerLocationListener(new BDLocationListener() {
             @Override
             public void onReceiveLocation(BDLocation bdLocation) {
                 String districtName = bdLocation.getDistrict();
-                editor = getSharedPreferences("weather",MODE_PRIVATE).edit();
-                editor.putString("cityName",districtName);
-                editor.apply();
-                Intent intent = new Intent(SplashActivity.this,WeatherActivity.class);
-                startActivity(intent);
-                finish();
+                if (districtName != null) {
+                    editor = getSharedPreferences("weather",MODE_PRIVATE).edit();
+                    editor.putString("cityName",districtName);
+                    editor.apply();
+                    startAutoUpdateService();//启动天气自动更新服务
+                } else {
+                    Toast.makeText(SplashActivity.this,"获取位置信息失败",Toast.LENGTH_SHORT).show();
+                }
+                startWeatherActivity();
             }
 
             @Override
@@ -127,6 +128,17 @@ public class SplashActivity extends AppCompatActivity {
                 //移动热点判断接口
             }
         });
+    }
+
+    public void startWeatherActivity() {
+        Intent intent = new Intent(SplashActivity.this,WeatherActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void startAutoUpdateService() {
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 
     /*图片请求
@@ -161,6 +173,6 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        locationClient.stop();
+        locationClient.stop();//活动销毁时停止定位
     }
 }

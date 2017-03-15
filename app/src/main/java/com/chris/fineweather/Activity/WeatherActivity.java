@@ -26,7 +26,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chris.fineweather.R;
 import com.chris.fineweather.gson.Weather;
-import com.chris.fineweather.service.AutoUpdateService;
 import com.chris.fineweather.util.HttpUtil;
 import com.chris.fineweather.util.ParserUtil;
 
@@ -73,7 +72,7 @@ public class WeatherActivity extends AppCompatActivity {
                         break;
                     case R.id.setting:
                         //设置待实现
-                        Toast.makeText(WeatherActivity.this, "这个功能很快就会有哒", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(WeatherActivity.this,"这个功能很快就会有哒",Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.about:
                         drawerLayout.closeDrawers();
@@ -116,7 +115,8 @@ public class WeatherActivity extends AppCompatActivity {
             //有缓存时直接读取缓存数据进行解析
             Weather weather = ParserUtil.handleWeatherResponse(weatherCache);
             if (weather != null) {
-                if ((weather.basic.city + "县").equals(cityName)) {
+                if ((weather.basic.city + "县").equals(cityName) || (weather.basic.city + "区")
+                        .equals(cityName)) {
                     showWeatherInfo(weather);
                 } else {
                     requestWeather(cityName);
@@ -148,10 +148,6 @@ public class WeatherActivity extends AppCompatActivity {
                 loadHeaderImage();
             }
         });
-
-        //启动天气自动更新服务
-        Intent intent = new Intent(this, AutoUpdateService.class);
-        startService(intent);
     }
 
     //从服务器查询天气数据
@@ -164,8 +160,7 @@ public class WeatherActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(WeatherActivity.this, "没联网咋更新天气呢",
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(WeatherActivity.this,"你可能没联网哦",Toast.LENGTH_SHORT).show();
                         swipeRefresh.setRefreshing(false);
                     }
                 });
@@ -183,9 +178,9 @@ public class WeatherActivity extends AppCompatActivity {
                             editor.putString("weatherCache",weatherResponse);
                             editor.apply();
                             showWeatherInfo(weather);
-                            Toast.makeText(WeatherActivity.this, "天气更新成功", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(WeatherActivity.this,"天气更新成功",Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(WeatherActivity.this, "天气加载失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(WeatherActivity.this,"天气更新失败",Toast.LENGTH_SHORT).show();
                         }
                         swipeRefresh.setRefreshing(false);
                     }

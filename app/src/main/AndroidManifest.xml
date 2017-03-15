@@ -29,6 +29,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        //配置百度AK
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="qDGLgs9vm0tafGTNhc8Pqqwk5RoFfgDo" />
