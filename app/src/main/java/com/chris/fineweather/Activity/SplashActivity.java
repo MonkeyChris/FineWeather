@@ -85,7 +85,6 @@ public class SplashActivity extends AppCompatActivity {
                         if (result != PackageManager.PERMISSION_GRANTED) {
                             Toast.makeText(this,"定位授权失败,手动选择城市或重新授权",Toast.LENGTH_LONG).show();
                             startWeatherActivity();
-                            return;
                         } else {
                             requestLocation();
                         }

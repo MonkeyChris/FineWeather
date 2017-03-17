@@ -84,7 +84,7 @@
             android:id="@+id/suggestion_cyzs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:text="@string/cyzs"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -105,11 +105,12 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="2dp"
             android:textSize="12sp"
             app:layout_constraintLeft_toLeftOf="@+id/suggestion_cyzs"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/suggestion_cyzs" />
+            app:layout_constraintTop_toBottomOf="@+id/suggestion_cyzs"
+            app:layout_constraintHorizontal_bias="0.0" />
 
         <TextView
             android:id="@+id/suggestion_fszs"
@@ -136,11 +137,12 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="2dp"
             android:textSize="12sp"
             app:layout_constraintLeft_toLeftOf="@+id/suggestion_fszs"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/suggestion_fszs" />
+            app:layout_constraintTop_toBottomOf="@+id/suggestion_fszs"
+            app:layout_constraintHorizontal_bias="0.0" />
 
         <TextView
             android:id="@+id/suggestion_gmzs"
@@ -158,11 +160,12 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="2dp"
             android:textSize="12sp"
             app:layout_constraintLeft_toLeftOf="@+id/suggestion_gmzs"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/suggestion_gmzs" />
+            app:layout_constraintTop_toBottomOf="@+id/suggestion_gmzs"
+            app:layout_constraintHorizontal_bias="0.0" />
 
         <TextView
             android:id="@+id/flu_brf"
@@ -198,11 +201,12 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="2dp"
             android:textSize="12sp"
             app:layout_constraintLeft_toLeftOf="@+id/suggestion_ydzs"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/suggestion_ydzs" />
+            app:layout_constraintTop_toBottomOf="@+id/suggestion_ydzs"
+            app:layout_constraintHorizontal_bias="0.0" />
 
         <TextView
             android:id="@+id/suggestion_lyzs"
@@ -220,11 +224,12 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="2dp"
             android:textSize="12sp"
             app:layout_constraintLeft_toLeftOf="@+id/suggestion_lyzs"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/suggestion_lyzs" />
+            app:layout_constraintTop_toBottomOf="@+id/suggestion_lyzs"
+            app:layout_constraintHorizontal_bias="0.0" />
 
         <TextView
             android:id="@+id/trav_brf"
@@ -258,10 +263,10 @@
             android:id="@+id/cw_txt"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="16dp"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="2dp"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
