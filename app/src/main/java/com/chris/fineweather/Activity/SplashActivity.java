@@ -173,6 +173,8 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        locationClient.stop();//活动销毁时停止定位
+        if (locationClient != null) {
+            locationClient.stop();//活动销毁时停止定位
+        }
     }
 }

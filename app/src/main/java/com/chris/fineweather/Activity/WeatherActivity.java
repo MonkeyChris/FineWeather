@@ -93,14 +93,21 @@ public class WeatherActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final AlertDialog.Builder fabDialog = new AlertDialog.Builder(WeatherActivity.this);
                 fabDialog.setTitle("反馈");
-                fabDialog.setMessage("有任何问题都可以去我的项目主页反馈哦");
+                fabDialog.setMessage("去应用商店给个评价吧，亲~");
                 fabDialog.setCancelable(true);
-                fabDialog.setPositiveButton("这就去", new DialogInterface.OnClickListener() {
+                fabDialog.setPositiveButton("好哒", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse("https://github.com/MonkeyChris/FineWeather"));
-                        startActivity(intent);
+                        try {
+                            String marketUrl = "market://details?id=" + getPackageName();
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(marketUrl));
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(WeatherActivity.this, "打开应用商店失败", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 });
                 fabDialog.show();
