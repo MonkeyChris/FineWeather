@@ -128,7 +128,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void startWeatherActivity() {
-        Intent intent = new Intent(this,WeatherActivity.class);
+        Intent intent = new Intent(this, WeatherActivity.class);
         startActivity(intent);
         finish();
     }

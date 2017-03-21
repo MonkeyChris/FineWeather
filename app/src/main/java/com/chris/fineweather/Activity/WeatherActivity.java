@@ -126,7 +126,7 @@ public class WeatherActivity extends AppCompatActivity {
             Weather weather = ParserUtil.handleWeatherResponse(weatherCache);
             assert weather != null;
             assert cityName != null;
-            if (cityName.equals(weather.basic.city + "市")) {
+            if (cityName.equals(weather.basic.city) | cityName.equals(weather.basic.city + "市")) {
                 showWeatherInfo(weather);
             } else {
                 requestWeather(cityName);
