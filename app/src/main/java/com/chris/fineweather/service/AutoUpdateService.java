@@ -1,13 +1,18 @@
 package com.chris.fineweather.service;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.support.v4.app.NotificationCompat;
 
+import com.chris.fineweather.Activity.WeatherActivity;
+import com.chris.fineweather.R;
 import com.chris.fineweather.gson.Weather;
 import com.chris.fineweather.util.HttpUtil;
 import com.chris.fineweather.util.ParserUtil;
@@ -30,7 +35,7 @@ public class AutoUpdateService extends Service {
         updateWeather();
         updateHeaderImage();
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        int updateTime = 60 * 60 * 1000;
+        int updateTime = 30 * 60 * 1000;
         long triggerTime = SystemClock.elapsedRealtime() + updateTime;
         Intent i = new Intent(this,AutoUpdateService.class);
         PendingIntent pi = PendingIntent.getService(this,0,i,0);
@@ -52,6 +57,7 @@ public class AutoUpdateService extends Service {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+
                 //解析返回的天气数据，存储为缓存
                 String responseText = response.body().string();
                 Weather weather = ParserUtil.handleWeatherResponse(responseText);
@@ -59,6 +65,21 @@ public class AutoUpdateService extends Service {
                     SharedPreferences.Editor editor = getSharedPreferences("weather",MODE_PRIVATE).edit();
                     editor.putString("weatherCache",responseText);
                     editor.apply();
+
+                    //天气通知栏
+                    String cityName = weather.basic.city;
+                    String nowCondTxt = weather.now.cond.txt;
+                    String nowTemp = weather.now.tmp + "℃";
+                    Intent intent = new Intent(AutoUpdateService.this,WeatherActivity.class);
+                    PendingIntent pi = PendingIntent.getActivity(AutoUpdateService.this,0,intent,0);
+                    Notification weatherNotification = new NotificationCompat.Builder(AutoUpdateService.this)
+                            .setContentTitle(cityName)
+                            .setContentText(nowTemp + " • " + nowCondTxt)
+                            .setSmallIcon(R.mipmap.ic_notification)
+                            .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher_round))
+                            .setContentIntent(pi)
+                            .build();
+                    startForeground(1,weatherNotification);
                 }
             }
         });
@@ -74,6 +95,7 @@ public class AutoUpdateService extends Service {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+
                 //解析服务器返回的数据，获取图片链接，存储为缓存
                 String responseText = response.body().string();
                 String url = ParserUtil.handleImageResponse(responseText);

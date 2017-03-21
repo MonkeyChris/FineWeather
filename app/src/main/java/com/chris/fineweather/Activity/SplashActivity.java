@@ -17,7 +17,6 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.chris.fineweather.R;
-import com.chris.fineweather.service.AutoUpdateService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,16 +109,15 @@ public class SplashActivity extends AppCompatActivity {
         locationClient.registerLocationListener(new BDLocationListener() {
             @Override
             public void onReceiveLocation(BDLocation bdLocation) {
-                String districtName = bdLocation.getDistrict();
-                if (districtName != null) {
+                String cityName = bdLocation.getCity(); //获取市名
+                if (cityName != null) {
                     editor = getSharedPreferences("weather",MODE_PRIVATE).edit();
-                    editor.putString("cityName",districtName);
+                    editor.putString("cityName",cityName); //存储市名
                     editor.apply();
-                    startAutoUpdateService();//启动天气自动更新服务
                 } else {
                     Toast.makeText(SplashActivity.this,"获取位置信息失败",Toast.LENGTH_SHORT).show();
                 }
-                startWeatherActivity();
+                startWeatherActivity();//转至天气显示界面
             }
 
             @Override
@@ -130,14 +128,9 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void startWeatherActivity() {
-        Intent intent = new Intent(SplashActivity.this,WeatherActivity.class);
+        Intent intent = new Intent(this,WeatherActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    public void startAutoUpdateService() {
-        Intent intent = new Intent(this, AutoUpdateService.class);
-        startService(intent);
     }
 
     /*图片请求

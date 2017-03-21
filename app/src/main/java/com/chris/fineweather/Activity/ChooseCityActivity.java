@@ -121,7 +121,7 @@ public class ChooseCityActivity extends AppCompatActivity {
             progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("城市列表");
             progressDialog.setMessage("服务器加载中...");
-            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setCancelable(false);
         }
         progressDialog.show();
     }

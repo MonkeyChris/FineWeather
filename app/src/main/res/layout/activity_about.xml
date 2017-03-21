@@ -25,22 +25,11 @@
             </android.support.v7.widget.Toolbar>
 
             <TextView
-                android:id="@+id/version"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="6dp"
-                android:text="@string/version"
-                android:textColor="#ffffff"/>
-
-            <TextView
                 android:id="@+id/version_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_toRightOf="@+id/version"
                 android:layout_marginBottom="6dp"
                 android:textColor="#ffffff"/>
 

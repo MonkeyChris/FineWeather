@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chris.fineweather.R;
 import com.chris.fineweather.gson.Weather;
+import com.chris.fineweather.service.AutoUpdateService;
 import com.chris.fineweather.util.HttpUtil;
 import com.chris.fineweather.util.ParserUtil;
 
@@ -92,22 +93,24 @@ public class WeatherActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder fabDialog = new AlertDialog.Builder(WeatherActivity.this);
-                fabDialog.setTitle("反馈");
-                fabDialog.setMessage("去应用商店给个评价吧，亲~");
+                fabDialog.setTitle("支持");
+                fabDialog.setMessage("去项目主页给作者个Star支持一下吧，亲~");
                 fabDialog.setCancelable(true);
                 fabDialog.setPositiveButton("好哒", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse("https://github.com/MonkeyChris/FineWeather"));
+                        startActivity(intent);
+                        /*try {
                             String marketUrl = "market://details?id=" + getPackageName();
                             Intent intent = new Intent(Intent.ACTION_VIEW);
                             intent.setData(Uri.parse(marketUrl));
-                            startActivity(intent);
+                            startActivity(intent);                  //打开应用商店的方法
                         } catch (Exception e) {
                             e.printStackTrace();
                             Toast.makeText(WeatherActivity.this, "打开应用商店失败", Toast.LENGTH_SHORT).show();
-                        }
-
+                        }*/
                     }
                 });
                 fabDialog.show();
@@ -117,17 +120,16 @@ public class WeatherActivity extends AppCompatActivity {
         //天气数据缓存机制
         final SharedPreferences prefs = getSharedPreferences("weather", MODE_PRIVATE);
         String weatherCache = prefs.getString("weatherCache", null);
-        String cityName = prefs.getString("cityName",null);
+        String cityName = prefs.getString("cityName", null);
         if (weatherCache != null) {
             //有缓存时直接读取缓存数据进行解析
             Weather weather = ParserUtil.handleWeatherResponse(weatherCache);
-            if (weather != null) {
-                if ((weather.basic.city + "县").equals(cityName) || (weather.basic.city + "区")
-                        .equals(cityName)) {
-                    showWeatherInfo(weather);
-                } else {
-                    requestWeather(cityName);
-                }
+            assert weather != null;
+            assert cityName != null;
+            if (cityName.equals(weather.basic.city + "市")) {
+                showWeatherInfo(weather);
+            } else {
+                requestWeather(cityName);
             }
         } else {
             //无缓存时从服务器查询
@@ -226,8 +228,16 @@ public class WeatherActivity extends AppCompatActivity {
         });
     }
 
+    public void startAutoUpdateService() {
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
+    }
+
     //将天气数据显示到UI上
     public void showWeatherInfo(Weather weather) {
+
+        startAutoUpdateService();//启动天气自动更新服务
+
         //basic
         TextView basicUpdateLoc = (TextView) findViewById(R.id.update_loc);
         //now
